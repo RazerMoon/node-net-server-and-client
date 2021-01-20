@@ -1,20 +1,16 @@
-import _prompt from "prompt-sync"
-import perpendicularDistance from "./functions/perpendicularDistance"
-const prompt = _prompt({ sigint: true })
+import startClient from "./functions/client"
+import startServer from "./functions/server"
 
-const firstTerm = parseFloat(prompt("Enter the first term of a function: "))
-const secondTerm = parseFloat(prompt("Enter the second term: "))
-const thirdTerm = parseFloat(prompt("Enter the third term: "))
-
-const pointX = parseFloat(prompt("Enter the x of a point: "))
-const pointY = parseFloat(prompt("Enter the y: "))
-
-console.log(
-  `The perpendicular distance is: ${perpendicularDistance(
-    firstTerm,
-    secondTerm,
-    thirdTerm,
-    pointX,
-    pointY
-  )}`
-)
+switch (process.argv.slice(2)[0]) {
+  case "server":
+    console.log("Starting server...\n")
+    startServer()
+    break
+  case "client":
+    console.log("Starting client...\n")
+    startClient()
+    break
+  default:
+    console.log("Sorry, that is not something I know how to do.")
+    break
+}
