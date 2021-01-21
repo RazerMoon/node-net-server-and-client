@@ -7,7 +7,8 @@
   "scripts": {
     "compile": "tsc",
     "server": "node out/index.js server",
-    "client": "node out/index.js client"
+    "client": "node out/index.js client",
+    "test": "node -e 'console.log(\"Hello world!\")'"
   },
   "devDependencies": {
     "@types/node": "^14.14.20",
