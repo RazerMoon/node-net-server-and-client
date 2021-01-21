@@ -42,14 +42,18 @@ jobs:
 
     - name: Create Scripts
       run: |
-        touch server.bat client.bat
+        touch server.bat client.bat server.sh client.sh
         echo "nnsc-windows.exe server" >> server.bat
         echo "nnsc-windows.exe client" >> client.bat
+        echo "#!/bin/bash" | tee *.sh
+        echo "./nnsc-linux server" >> server.sh
+        echo "./nnsc-linux client" >> client.sh
+
       
     - name: Create Zip
       run: |
         zip --junk-paths nnsc-windows nnsc-windows.exe server.bat client.bat
-        zip --junk-paths nnsc-linux nnsc-linux
+        zip --junk-paths nnsc-linux nnsc-linux server.sh client.sh
         zip --junk-paths nnsc-macos nnsc-macos
 
     - name: Create Release
