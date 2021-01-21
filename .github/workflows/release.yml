@@ -1,6 +1,7 @@
 name: Create release
 
-on: 
+on:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -29,25 +30,27 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
-    
-    - name: Install Pkg
-      run: npm i pkg
 
     - name: Compile
       run: npm run compile
 
-    - name: Test
-      run: npm run test
+    - name: Create Executables
+      run: |
+        pkg -o nnsc-windows.exe -t latest-win-x64 .
+        pkg -o nnsc-linux -t latest-linux-x64 .
+        pkg -o nnsc-macos -t latest-macos-x64 .
 
-    - name: Add Scripts
+    - name: Create Scripts
       run: |
         touch server.bat client.bat
-        echo "nnsc.exe server" >> server.bat
-        echo "nnsc.exe client" >> client.bat
+        echo "nnsc-windows.exe server" >> server.bat
+        echo "nnsc-windows.exe client" >> client.bat
       
     - name: Create Zip
       run: |
-        zip --junk-paths windows README.md server.bat client.bat
+        zip --junk-paths nnsc-windows nnsc-windows.exe server.bat client.bat
+        zip --junk-paths nnsc-linux nnsc-linux.exe
+        zip --junk-paths nnsc-macos nnsc-macos.exe
 
     - name: Create Release
       id: create_release
@@ -55,18 +58,40 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: v1.${{ github.run_number }}
+        release_name: Release v1.${{ github.ref }}
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
-      id: upload-release-asset 
+    - name: Upload Windows Release
+      id: upload-windows-release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ./windows.zip
-        asset_name: windows.zip
+        asset_path: ./nnsc-windows.zip
+        asset_name: nnsc-windows.zip
+        asset_content_type: application/zip
+
+    - name: Upload Linux Release
+      id: upload-linux-release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./nnsc-linux.zip
+        asset_name: nnsc-linux.zip
+        asset_content_type: application/zip
+
+    - name: Upload macOS Release
+      id: upload-macos-release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./nnsc-macos.zip
+        asset_name: nnsc-macos.zip
         asset_content_type: application/zip
