@@ -49,8 +49,8 @@ jobs:
     - name: Create Zip
       run: |
         zip --junk-paths nnsc-windows nnsc-windows.exe server.bat client.bat
-        zip --junk-paths nnsc-linux nnsc-linux.exe
-        zip --junk-paths nnsc-macos nnsc-macos.exe
+        zip --junk-paths nnsc-linux nnsc-linux
+        zip --junk-paths nnsc-macos nnsc-macos
 
     - name: Create Release
       id: create_release
