@@ -1,9 +1,9 @@
 name: Deploy
 
 on:
-  push:
-    branches: 
-      - master
+#  push:
+#    branches: 
+#      - master
   workflow_dispatch:
 
 jobs:
@@ -30,4 +30,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        script: ls
+        script: tmux kill-session && cd /var/www/tcp-server && yarn && yarn compile && tmux && yarn server
