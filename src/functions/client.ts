@@ -51,7 +51,7 @@ function messageLoop() {
 export default function startClient(): void {
   const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
   client.connect(parseInt(PORT), IP_ADDRESS, () => {
-    console.log("Connected\n")
+    console.log(`Connected to ${IP_ADDRESS}:${PORT}\n`)
 
     alive = true
 

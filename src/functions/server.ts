@@ -1,5 +1,9 @@
 import { createServer } from "net"
-import ServerResponse from "../interfaces/ServerResponse"
+import { CommandError, ServerResponse } from "../interfaces/response"
+//import { add } from "../commands/math"
+import * as _math from "../commands/math"
+import * as _test from "../commands/test"
+const commands = { ..._math, ..._test }
 
 export default function startServer(): void {
   const server = createServer((socket) => {
@@ -19,7 +23,7 @@ export default function startServer(): void {
     })
 
     socket.on("connect", () => {
-      console.log("Connection established!\n")
+      console.log(`Connection established!\n`)
     })
 
     socket.on("data", (data) => {
@@ -28,48 +32,53 @@ export default function startServer(): void {
 
       const resObj: ServerResponse = {
         messageReceived: parsedMsg,
-        operation: null,
+        command: null,
         success: true,
         error: null,
         response: null,
       }
 
       if (splitMsg.length > 0) {
+        if (splitMsg[0].toLowerCase() in commands) {
+          // We are taking off the safety belt.
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const command = commands[splitMsg[0].toLowerCase()]
+
+          if (splitMsg.length - 1 === command.length) {
+            // Check number of params matches number of params in func.
+            Object.assign(resObj, command(...splitMsg.slice(1)))
+          } else {
+            Object.assign(resObj, <CommandError>{
+              command: { type: command.name.toUpperCase() },
+              success: false,
+              error: "Wrong number of arguments provided",
+            })
+          }
+        }
+        /*
         switch (splitMsg[0]) {
-          case "ADD":
-            if (splitMsg.length !== 3) {
-              Object.assign(resObj, {
-                operation: { type: "ADD" },
+          case add.name.toUpperCase():
+            if (splitMsg.length - 1 === add.length) {
+              Object.assign(resObj, add(splitMsg[1], splitMsg[2]))
+            } else {
+              Object.assign(resObj, <CommandError>{
+                command: { type: add.name.toUpperCase() },
                 success: false,
                 error: "Wrong number of arguments provided",
-              })
-              break
-            }
-
-            const num1 = parseInt(splitMsg[1])
-            const num2 = parseInt(splitMsg[2])
-
-            if (!(isNaN(num1) || isNaN(num2))) {
-              Object.assign(resObj, {
-                operation: { type: "ADD", args: [num1, num2] },
-                response: (num1 + num2).toString(),
-              })
-            } else {
-              Object.assign(resObj, {
-                operation: { type: "ADD" },
-                success: false,
-                error: "One of the arguments is NaN",
               })
             }
             break
           default:
             break
         }
+        */
       }
 
+      socket.write(JSON.stringify(resObj))
+      resObj.remoteAddress = socket.remoteAddress
       console.log(resObj)
       console.log("\n")
-      socket.write(JSON.stringify(resObj))
     })
 
     socket.on("close", () => {
@@ -79,5 +88,5 @@ export default function startServer(): void {
 
   const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
   server.listen(parseInt(PORT), IP_ADDRESS)
-  console.log("Listening...\n")
+  console.log(`Listening on ${IP_ADDRESS}:${PORT}\n`)
 }
