@@ -14,20 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
       env:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
       with:
-        source: "."
-        target: "/var/www/tcp-server"
-
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      with:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        script: tmux kill-session ; cd /var/www/tcp-server && yarn && yarn compile && touch .env && echo "IP_ADDRESS=${{ secrets.HOST }}" >> .env && tmux new-session -s tcp-server -d && tmux send -t tcp-server yarn SPACE server ENTER
+        script: tmux kill-session ; cd /var/www/ && git clone git@github.com:RazerMoon/node-net-server-and-client.git tcp-server && cd tcp-server && git pull && yarn && yarn compile && touch .env && echo "IP_ADDRESS=${{ secrets.HOST }}" >> .env && tmux new-session -s tcp-server -d && tmux send -t tcp-server yarn SPACE server ENTER
