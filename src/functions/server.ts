@@ -77,6 +77,7 @@ export default function startServer(): void {
     })
   })
 
-  server.listen(1337, "127.0.0.1")
+  const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
+  server.listen(parseInt(PORT), IP_ADDRESS)
   console.log("Listening...\n")
 }

@@ -1,6 +1,9 @@
 import startClient from "./functions/client"
 import startServer from "./functions/server"
 
+import _dotenv from "dotenv"
+_dotenv.config()
+
 switch (process.argv.slice(2)[0]) {
   case "server":
     console.log("Starting server...\n")

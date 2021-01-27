@@ -24,4 +24,6 @@ Start client:
 yarn client
 ```
 
+Rename the .env.example to .env and fill out the fields for custom ip.
+
 You can also download the lastest release.
