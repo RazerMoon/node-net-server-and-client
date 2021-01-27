@@ -1,9 +1,20 @@
 import { createServer } from "net"
-import { CommandError, ServerResponse } from "../interfaces/response"
+import {
+  CommandError,
+  ServerResponse,
+  ResponseContainer,
+} from "../interfaces/response"
 //import { add } from "../commands/math"
 import * as _math from "../commands/math"
 import * as _test from "../commands/test"
 const commands = { ..._math, ..._test }
+
+import low from "lowdb"
+import FileSync from "lowdb/adapters/FileSync"
+
+const db = low(new FileSync<ResponseContainer>("db.json"))
+
+db.defaults(<ResponseContainer>{ responses: [] }).write()
 
 export default function startServer(): void {
   const server = createServer((socket) => {
@@ -77,6 +88,12 @@ export default function startServer(): void {
 
       socket.write(JSON.stringify(resObj))
       resObj.remoteAddress = socket.remoteAddress
+      resObj.timeOfResponse = new Date().toLocaleString("en-GB", {
+        timeZone: "UTC",
+      })
+
+      db.get("responses").push(resObj).write()
+
       console.log(resObj)
       console.log("\n")
     })

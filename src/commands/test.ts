@@ -1,7 +1,7 @@
 import { CommandSuccess, _ServerResponse } from "../interfaces/response"
 
 /**
- * Adds two numbers.
+ * Returns a pong.
  */
 export function ping(): _ServerResponse {
   return <CommandSuccess>{
