@@ -30,4 +30,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        script: tmux kill-session ; cd /var/www/tcp-server && yarn && yarn compile && tmux new-session -s tcp-server -d && tmux send -t tcp-server yarn server ENTER
+        script: tmux kill-session ; cd /var/www/tcp-server && yarn && yarn compile && tmux new-session -s tcp-server -d && tmux send -t tcp-server yarn SPACE server ENTER
