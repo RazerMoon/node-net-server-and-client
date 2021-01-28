@@ -1,40 +1,36 @@
 /**
- * Response to request.
+ * Response record.
  */
-export interface ServerResponse {
+export interface ServerRecord {
   messageReceived: string
-  remoteAddress?: string
-  timeOfResponse?: string
-  command: string | Record<string, unknown> | null
+  remoteAddress: string
+  timeOfResponse: string
+  command: string | { type?: string; args?: unknown[] } | null
   success: boolean
   error: string | Record<string, unknown> | null
-  response: string | Record<string, unknown> | null
+  response: string | Record<string, unknown> | string[] | null
 }
 
 /**
- * Used for building response requests.
+ * Consists of an address and time
  */
-export interface _ServerResponse {
-  messageReceived?: string
-  remoteAddress?: string
-  timeOfResponse?: string
-  command?: string | Record<string, unknown> | null
-  success?: boolean
-  error?: string | Record<string, unknown> | null
-  response?: string | Record<string, unknown> | null
+export type RecordDetails = Pick<
+  ServerRecord,
+  "remoteAddress" | "timeOfResponse"
+>
+
+/**
+ * Response to request.
+ */
+export type ServerResponse = Omit<
+  ServerRecord,
+  "remoteAddress" | "timeOfResponse"
+>
+
+export interface RecordContainer {
+  responses: ServerRecord[]
 }
 
-export interface ResponseContainer {
-  responses: ServerResponse[]
-}
+export type CommandError = Pick<ServerResponse, "command" | "success" | "error">
 
-export interface CommandError {
-  command: string | Record<string, unknown>
-  success: boolean
-  error: string | Record<string, unknown>
-}
-
-export interface CommandSuccess {
-  command: string | Record<string, unknown>
-  response: string | Record<string, unknown>
-}
+export type CommandSuccess = Pick<ServerResponse, "command" | "response">

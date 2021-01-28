@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc",
+    "watch": "tsc --watch",
     "server": "node out/index.js server",
     "client": "node out/index.js client",
     "type-check": "tsc --pretty --noEmit",

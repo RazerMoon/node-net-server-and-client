@@ -1,9 +1,9 @@
-import { CommandSuccess, _ServerResponse } from "../interfaces/response"
+import { CommandSuccess } from "../interfaces/response"
 
 /**
  * Returns a pong.
  */
-export function ping(): _ServerResponse {
+export function ping(): CommandSuccess {
   return <CommandSuccess>{
     command: { type: "PING" },
     response: "PONG",

@@ -2,3 +2,4 @@
 /out
 .env
 db.json
+*.tsbuildinfo

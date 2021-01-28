@@ -7,12 +7,19 @@ const client = new Socket()
 
 let alive = false
 
+const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
+
 client.on("error", (err) => {
   alive = false
 
   switch (err.message.split(" ")[1]) {
     case "ECONNRESET":
       console.log("The connection was reset!")
+      break
+    case "ECONNREFUSED":
+      console.log(
+        `A connection could not be made to ${IP_ADDRESS}:${PORT}, Please check the address, port, and make sure the server is running and can be accessed!`
+      )
       break
     default:
       console.log("An error occured!\n")
@@ -40,18 +47,29 @@ client.on("close", () => {
 function messageLoop() {
   if (alive) {
     const msg = prompt("Send message: ")
+
+    if (msg === "/exit") {
+      alive = false
+    }
+
     alive && client.write(msg)
 
     setTimeout(() => {
       messageLoop()
     }, 100)
+  } else {
+    client.destroy()
   }
 }
 
+/**
+ * Starts client
+ */
 export default function startClient(): void {
-  const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
   client.connect(parseInt(PORT), IP_ADDRESS, () => {
-    console.log(`Connected to ${IP_ADDRESS}:${PORT}\n`)
+    console.log(
+      `Connected to ${IP_ADDRESS}:${PORT}, send '/exit' to leave client. \n`
+    )
 
     alive = true
 
