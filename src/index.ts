@@ -2,7 +2,10 @@ import startClient from "./functions/client"
 import startServer from "./functions/server"
 
 import _dotenv from "dotenv"
-_dotenv.config()
+
+if (process.env.NODE_ENV !== "production") {
+  _dotenv.config()
+}
 
 switch (process.argv.slice(2)[0]) {
   case "server":
