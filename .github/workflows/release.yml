@@ -40,9 +40,9 @@ jobs:
 
     - name: Create Executables
       run: |
-        npx pkg -o nnsc-windows.exe -t alpine-win-x64 .
-        npx pkg -o nnsc-linux -t alpine-linux-x64 .
-        npx pkg -o nnsc-macos -t alpine-macos-x64 .
+        npx pkg -o nnsc-windows.exe -t latest-win-x64 .
+        npx pkg -o nnsc-linux -t latest-linux-x64 .
+        npx pkg -o nnsc-macos -t latest-macos-x64 .
 
     - name: Create Scripts
       run: |
