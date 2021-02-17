@@ -1,9 +1,14 @@
+import Lowdb from "lowdb"
 import { createServer as _createServer, Server } from "net"
-import { RecordDetails, ServerRecord } from "../interfaces/response"
+import {
+  RecordContainer,
+  RecordDetails,
+  ServerRecord,
+} from "../interfaces/response"
 import createResponse from "../util/createResponse"
 
 import initDB from "./db"
-const db = initDB()
+let db: Lowdb.LowdbSync<RecordContainer>
 
 const { PORT = "1337", IP_ADDRESS = "127.0.0.1" } = process.env
 
@@ -62,6 +67,8 @@ function createServer(): Server {
  * Starts server.
  */
 export default function startServer(): void {
+  db = initDB()
+
   const server = createServer()
 
   server.listen(parseInt(PORT), IP_ADDRESS)

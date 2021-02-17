@@ -1,11 +1,11 @@
-import startClient from "./functions/client"
-import startServer from "./functions/server"
-
 import _dotenv from "dotenv"
 
 if (process.env.NODE_ENV !== "production") {
   _dotenv.config()
 }
+
+import startClient from "./functions/client"
+import startServer from "./functions/server"
 
 switch (process.argv.slice(2)[0]) {
   case "server":
