@@ -2,7 +2,13 @@ FROM node:lts-alpine
 
 ENV MODE=server
 
-WORKDIR /usr/src/nnsc
+EXPOSE 1337
+
+USER node
+
+RUN mkdir -p /home/node/app
+
+WORKDIR /home/node/app
 
 COPY package.json yarn.lock ./
 
@@ -11,8 +17,6 @@ RUN yarn
 COPY . .
 
 RUN yarn compile
-
-EXPOSE 1337
 
 CMD [ "sh", "-c", "node out/index.js ${MODE}" ]
 
