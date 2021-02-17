@@ -4,7 +4,7 @@ ENV MODE=server
 
 WORKDIR /usr/src/nnsc
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock tsconfig.json ./
 
 RUN yarn
 
