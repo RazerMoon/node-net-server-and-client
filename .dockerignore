@@ -1,0 +1,8 @@
+.github
+.media
+node_modules
+out
+.env.example
+.gitignore
+LICENSE.md
+README.md
