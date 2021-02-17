@@ -12,7 +12,7 @@ WORKDIR /home/node/app
 
 COPY package.json yarn.lock ./
 
-RUN yarn
+RUN yarn install --production
 
 COPY . .
 
