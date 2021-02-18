@@ -2,6 +2,8 @@ FROM node:lts-alpine
 
 ENV MODE=server
 
+ENV NODE_ENV=production
+
 EXPOSE 1337
 
 USER node
